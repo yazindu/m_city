@@ -3,7 +3,9 @@ import {useFormik} from "formik";
 import {useState} from "react";
 import {CircularProgress} from "@mui/material";
 import {firebaseApp} from "../../firebase.ts";
-import { getAuth } from "firebase/auth";
+import {getAuth, createUserWithEmailAndPassword} from "firebase/auth";
+
+
 
 export const SignIn = () => {
     const [loading, setLoading] = useState(false)
@@ -28,8 +30,17 @@ export const SignIn = () => {
         }
     })
 
-    const submitForm = ({email: string, password: string}) => {
-        firebaseApp
+    const submitForm = ({email, password}: { email: string, password: string }) => {
+        const auth = getAuth(firebaseApp)
+        createUserWithEmailAndPassword(auth, email, password)
+            .then(() => {
+                //show success toast
+            })
+            .catch(error => {
+                setLoading(false)
+                console.log(error)
+                //show toast
+            })
     }
     return (
         <div className={'container'}>
