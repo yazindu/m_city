@@ -2,6 +2,8 @@ import * as Yup from 'yup'
 import {useFormik} from "formik";
 import {useState} from "react";
 import {CircularProgress} from "@mui/material";
+import {firebaseApp} from "../../firebase.ts";
+import { getAuth } from "firebase/auth";
 
 export const SignIn = () => {
     const [loading, setLoading] = useState(false)
@@ -21,9 +23,14 @@ export const SignIn = () => {
         onSubmit: (values) => {
             //goto server with field values
             setLoading(true)
+            submitForm(values)
             console.log(values)
         }
     })
+
+    const submitForm = ({email: string, password: string}) => {
+        firebaseApp
+    }
     return (
         <div className={'container'}>
             <div className={'signin_wrapper'} style={{margin: '100px'}}>
