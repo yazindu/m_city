@@ -9,7 +9,7 @@ const AppRoutes = ({user} : {user: FirebaseUser | null}) => {
     console.log(user)
     return (
         <BrowserRouter>
-            <Header/>
+            <Header user={user}/>
             <Routes>
                 <Route path={'/sign_in'} element={<SignIn/>}/>
                 <Route path={'/'} element={<Home/>}/>
