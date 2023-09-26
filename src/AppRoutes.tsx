@@ -3,8 +3,10 @@ import {Header} from "./components/header_footer/Header.tsx";
 import {Home} from "./components/home";
 import {Footer} from "./components/header_footer/Footer.tsx";
 import {SignIn} from "./components/signin";
+import {User as FirebaseUser} from "firebase/auth";
 
-const App = () => {
+const AppRoutes = ({user} : {user: FirebaseUser | null}) => {
+    console.log(user)
     return (
         <BrowserRouter>
             <Header/>
@@ -17,4 +19,4 @@ const App = () => {
     )
 }
 
-export default App
+export default AppRoutes
