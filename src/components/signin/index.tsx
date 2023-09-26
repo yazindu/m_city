@@ -4,6 +4,7 @@ import {useState} from "react";
 import {CircularProgress} from "@mui/material";
 import {firebaseApp} from "../../firebase.ts";
 import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
+import {showToastError, showToastSuccess} from "../utils/tools.tsx";
 
 
 export const SignIn = () => {
@@ -22,7 +23,6 @@ export const SignIn = () => {
                 .required('The password is required')
         }),
         onSubmit: (values) => {
-            //goto server with field values
             setLoading(true)
             submitForm(values)
             console.log(values)
@@ -34,14 +34,12 @@ export const SignIn = () => {
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 const user = userCredential.user;
-                //show success toast
+                showToastSuccess("Welcome back!");
                 //props.history.push('/dashboard')
-                alert('logged in!')
             })
             .catch(error => {
                 setLoading(false)
-                alert(error)
-                //show toast
+                showToastError(error.message)
             })
     }
     return (

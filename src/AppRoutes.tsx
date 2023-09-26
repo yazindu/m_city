@@ -4,6 +4,8 @@ import {Home} from "./components/home";
 import {Footer} from "./components/header_footer/Footer.tsx";
 import {SignIn} from "./components/signin";
 import {User as FirebaseUser} from "firebase/auth";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AppRoutes = ({user} : {user: FirebaseUser | null}) => {
     console.log(user)
@@ -14,6 +16,7 @@ const AppRoutes = ({user} : {user: FirebaseUser | null}) => {
                 <Route path={'/sign_in'} element={<SignIn/>}/>
                 <Route path={'/'} element={<Home/>}/>
             </Routes>
+            <ToastContainer/>
             <Footer/>
         </BrowserRouter>
     )

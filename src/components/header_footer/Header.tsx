@@ -2,16 +2,15 @@ import {AppBar, Toolbar, Button} from '@mui/material/'
 import {Link} from "react-router-dom";
 import {CityLogo} from "../utils/tools.tsx";
 import {User as FirebaseUser, getAuth, signOut} from "@firebase/auth";
+import {showToastError, showToastSuccess} from "../utils/tools.tsx";
 
 export const Header = ({user}: { user: FirebaseUser | null }) => {
     const logOutHandler = () => {
         const auth = getAuth();
         signOut(auth).then(() => {
-            // Sign-out successful.
-            alert('Signed out')
+            showToastSuccess('Good bye!')
         }).catch((error) => {
-            // An error happened.
-            alert(error)
+            showToastError(error.message)
         });
     }
 
