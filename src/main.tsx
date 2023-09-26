@@ -11,9 +11,10 @@ const App = ({user}: { user: FirebaseUser | null }) => {
     )
 }
 
+const root = ReactDOM.createRoot(document.getElementById('root')!)
 const auth = getAuth()
 onAuthStateChanged(auth, (user) => {
-    ReactDOM.createRoot(document.getElementById('root')!).render(
+    root.render(
         <React.StrictMode>
             <App user={user}/>
         </React.StrictMode>,
