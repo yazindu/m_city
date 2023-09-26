@@ -5,6 +5,7 @@ import {CircularProgress} from "@mui/material";
 import {firebaseApp} from "../../firebase.ts";
 import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
 import {showToastError, showToastSuccess} from "../utils/tools.tsx";
+import {Navigate, redirect} from "react-router-dom";
 
 
 export const SignIn = () => {
@@ -33,9 +34,11 @@ export const SignIn = () => {
         const auth = getAuth(firebaseApp)
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
-                const user = userCredential.user;
+                //const user = userCredential.user;
                 showToastSuccess("Welcome back!");
                 //props.history.push('/dashboard')
+                redirect('/dashboard')
+                //return (<Navigate to={'/dashboard'}/>)
             })
             .catch(error => {
                 setLoading(false)
@@ -55,7 +58,8 @@ export const SignIn = () => {
                         value={formik.values.email}
                     />
                     {formik.touched.email && formik.errors.email
-                        ? <div className={'error_label'}> {formik.errors.email}</div>
+                        ?
+                        <div className={'error_label'}> {formik.errors.email}</div>
                         : null
                     }
                     <input
@@ -67,12 +71,14 @@ export const SignIn = () => {
                         value={formik.values.password}
                     />
                     {formik.touched.password && formik.errors.password
-                        ? <div className={'error_label'}> {formik.errors.password}</div>
+                        ?
+                        <div className={'error_label'}> {formik.errors.password}</div>
                         : null
                     }
                     {loading
                         ? <CircularProgress color={"secondary"} className={'progress'}/>
-                        : <button type={'submit'}>Log in</button>
+                        :
+                        <button type={'submit'}>Log in</button>
                     }
                 </form>
             </div>
