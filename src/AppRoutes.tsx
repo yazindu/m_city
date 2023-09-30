@@ -16,7 +16,7 @@ const AppRoutes = ({user} : {user: FirebaseUser | null}) => {
             <Header user={user}/>
             <Routes>
                 <Route path={'/sign_in'} element={<SignIn/>}/>
-                <Route path={'/dashboard'} element={AuthGuard({component: Dashboard()})}/>
+                <Route path={'/dashboard'} element={AuthGuard(Dashboard)({})}/>
                 <Route path={'/'} element={<Home/>}/>
             </Routes>
             <ToastContainer/>
