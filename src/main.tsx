@@ -2,8 +2,9 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './resources/css/app.css'
 import AppRoutes from './AppRoutes.tsx'
-import {getAuth, onAuthStateChanged} from "firebase/auth";
+import {onAuthStateChanged} from "firebase/auth";
 import {User as FirebaseUser} from "firebase/auth";
+import {auth} from "./config/firebase_config.ts";
 
 const App = ({user}: { user: FirebaseUser | null }) => {
     return (
@@ -12,7 +13,6 @@ const App = ({user}: { user: FirebaseUser | null }) => {
 }
 
 const root = ReactDOM.createRoot(document.getElementById('root')!)
-const auth = getAuth()
 onAuthStateChanged(auth, (user) => {
     root.render(
         <React.StrictMode>

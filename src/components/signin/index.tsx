@@ -2,16 +2,16 @@ import * as Yup from 'yup'
 import {useFormik} from "formik";
 import {useState} from "react";
 import {CircularProgress} from "@mui/material";
-import {firebaseApp} from "../../firebase.ts";
+import {firebaseApp} from "../../config/firebase_config.ts";
 import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
 import {showToastError, showToastSuccess} from "../utils/tools.tsx";
-import {Navigate, redirect} from "react-router-dom";
-
 
 export const SignIn = () => {
     const [loading, setLoading] = useState(false)
 
+
     const formik = useFormik({
+
         initialValues: {
             email: 'ynk.techlead@gmail.com',
             password: '123456'
@@ -34,11 +34,9 @@ export const SignIn = () => {
         const auth = getAuth(firebaseApp)
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
-                //const user = userCredential.user;
+                const user = userCredential.user;
                 showToastSuccess("Welcome back!");
-                //props.history.push('/dashboard')
-                redirect('/dashboard')
-                //return (<Navigate to={'/dashboard'}/>)
+                //navigate('/dashboard')
             })
             .catch(error => {
                 setLoading(false)
