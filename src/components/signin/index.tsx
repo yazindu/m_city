@@ -5,10 +5,11 @@ import {CircularProgress} from "@mui/material";
 import {firebaseApp} from "../../config/firebase_config.ts";
 import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
 import {showToastError, showToastSuccess} from "../utils/tools.tsx";
+import {useNavigate} from "react-router-dom";
 
 export const SignIn = () => {
     const [loading, setLoading] = useState(false)
-
+    const navigate = useNavigate();
 
     const formik = useFormik({
 
@@ -36,7 +37,7 @@ export const SignIn = () => {
             .then((userCredential) => {
                 const user = userCredential.user;
                 showToastSuccess("Welcome back!");
-                //navigate('/dashboard')
+                navigate('/dashboard')
             })
             .catch(error => {
                 setLoading(false)
