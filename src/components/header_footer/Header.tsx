@@ -1,17 +1,12 @@
-import {AppBar, Toolbar, Button} from '@mui/material/'
-import {Link, useNavigate} from "react-router-dom";
-import {CityLogo} from "../utils/tools.tsx";
-import {User as FirebaseUser, signOut} from "@firebase/auth";
-import {showToastError, showToastSuccess} from "../utils/tools.tsx";
+import {AppBar, Button, Toolbar} from '@mui/material/'
+import {Link} from "react-router-dom";
+import {CityLogo, showToastError, showToastSuccess} from "../utils/tools.tsx";
+import {signOut, User as FirebaseUser} from "@firebase/auth";
 import {auth} from "../../config/firebase_config.ts";
 
 export const Header = ({user}: { user: FirebaseUser | null }) => {
-    const navigate = useNavigate();
-
-
     const logOutHandler = () => {
         signOut(auth).then(() => {
-            navigate('/')
             showToastSuccess('Good bye!')
         }).catch((error) => {
             showToastError(error.message)
