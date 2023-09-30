@@ -25,12 +25,12 @@ export const CityLogo = ({linkTo, link, width, height}: cityLogoProps) => {
     else return template
 }
 
-export const showToastError = (msg) => {
+export const showToastError = (msg : string) => {
     toast.error(msg, {
         position: toast.POSITION.TOP_LEFT
     })
 }
-export const showToastSuccess = (msg) => {
+export const showToastSuccess = (msg: string) => {
     toast.success(msg, {
         position: toast.POSITION.TOP_LEFT
     })
