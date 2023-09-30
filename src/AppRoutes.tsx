@@ -9,6 +9,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import {Dashboard} from "./components/admin/Dashboard.tsx";
 import {AuthGuard} from "./hoc/Auth.tsx";
 
+const GuardedDashboard = AuthGuard(Dashboard);
+
 const AppRoutes = ({user} : {user: FirebaseUser | null}) => {
     console.log(user)
     return (
@@ -16,7 +18,7 @@ const AppRoutes = ({user} : {user: FirebaseUser | null}) => {
             <Header user={user}/>
             <Routes>
                 <Route path={'/sign_in'} element={<SignIn/>}/>
-                <Route path={'/dashboard'} element={AuthGuard(Dashboard)({})}/>
+                <Route path={'/dashboard'} element={<GuardedDashboard isVisible={true}/>}/>
                 <Route path={'/'} element={<Home/>}/>
             </Routes>
             <ToastContainer/>
