@@ -1,9 +1,9 @@
-import {Test} from "./test.tsx";
+import {Stripes} from "./Stripes.tsx";
 
 export const Featured = () => {
     return (
         <div className={'featured_wrapper'}>
-            <Test/>
+            <Stripes/>
         </div>
     )
 }
