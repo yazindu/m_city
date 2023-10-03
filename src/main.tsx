@@ -1,4 +1,3 @@
-import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './resources/css/app.css'
 import AppRoutes from './AppRoutes.tsx'
@@ -15,9 +14,7 @@ const App = ({user}: { user: FirebaseUser | null }) => {
 const root = ReactDOM.createRoot(document.getElementById('root')!)
 onAuthStateChanged(auth, (user) => {
     root.render(
-        <React.StrictMode>
-            <App user={user}/>
-        </React.StrictMode>,
+        <App user={user}/>
     )
     /*
     if (user) {
