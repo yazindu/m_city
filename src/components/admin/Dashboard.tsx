@@ -1,9 +1,13 @@
+import {AdminLayout} from "./AdminLayout.tsx";
+
 export const Dashboard = () => {
     return (
-        <>
-            <br/><br/><br/><br/><br/><br/>
-            <h1>Dashboard</h1>
-            <p>Your dashboard content here</p>
-        </>
+        <AdminLayout>
+            <div className={'user_dashboard'}>
+                <div>
+                    This is your dashboard
+                </div>
+            </div>
+        </AdminLayout>
     )
 }
