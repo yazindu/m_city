@@ -1,8 +1,9 @@
+import {Featured} from "./featured";
+
 export const Home = () => {
     return (
-        <>
-            <br/><br/><br/><br/><br/><br/>
-            <h1>Home</h1>
-        </>
+        <div className={'bck_blue'}>
+            <Featured/>
+        </div>
     )
 }
