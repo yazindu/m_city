@@ -10,7 +10,6 @@ import {AuthGuard} from "./hoc/AuthGuard.tsx";
 import {Dashboard} from "./components/admin/Dashboard.tsx";
 
 const AppRoutes = ({user}: { user: FirebaseUser | null }) => {
-    console.log(user)
     return (
         <BrowserRouter>
             <Header user={user}/>

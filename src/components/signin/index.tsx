@@ -1,13 +1,12 @@
 import * as Yup from 'yup'
 import {useFormik} from "formik";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {CircularProgress} from "@mui/material";
 import {firebaseApp} from "../../config/firebase_config.ts";
 import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
 import {showToastError, showToastSuccess} from "../utils/tools.tsx";
 import {useNavigate} from "react-router-dom";
 import {User as FirebaseUser} from "firebase/auth";
-import {Dashboard} from "../admin/Dashboard.tsx";
 
 export const SignIn = ({user}: { user: FirebaseUser | null }) => {
     const [loading, setLoading] = useState(false)
@@ -46,48 +45,48 @@ export const SignIn = ({user}: { user: FirebaseUser | null }) => {
                 showToastError(error.message)
             })
     }
-    if (!user) {
-        return (
-            <div className={'container'}>
-                <div className={'signin_wrapper'} style={{margin: '100px'}}>
-                    <form onSubmit={formik.handleSubmit}>
-                        <h2>Please log in</h2>
-                        <input
-                            name={'email'}
-                            placeholder={'Email'}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.email}
-                        />
-                        {formik.touched.email && formik.errors.email
-                            ?
-                            <div className={'error_label'}> {formik.errors.email}</div>
-                            : null
-                        }
-                        <input
-                            name={'password'}
-                            placeholder={'Password'}
-                            type={"password"}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            value={formik.values.password}
-                        />
-                        {formik.touched.password && formik.errors.password
-                            ?
-                            <div className={'error_label'}> {formik.errors.password}</div>
-                            : null
-                        }
-                        {loading
-                            ? <CircularProgress color={"secondary"} className={'progress'}/>
-                            :
-                            <button type={'submit'}>Log in</button>
-                        }
-                    </form>
-                </div>
+
+    useEffect(() => {
+        if (!!user) navigate('/dashboard')
+    }, [navigate, user]);
+
+    return !user && (
+        <div className={'container'}>
+            <div className={'signin_wrapper'} style={{margin: '100px'}}>
+                <form onSubmit={formik.handleSubmit}>
+                    <h2>Please log in</h2>
+                    <input
+                        name={'email'}
+                        placeholder={'Email'}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.email}
+                    />
+                    {formik.touched.email && formik.errors.email
+                        ?
+                        <div className={'error_label'}> {formik.errors.email}</div>
+                        : null
+                    }
+                    <input
+                        name={'password'}
+                        placeholder={'Password'}
+                        type={"password"}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.password}
+                    />
+                    {formik.touched.password && formik.errors.password
+                        ?
+                        <div className={'error_label'}> {formik.errors.password}</div>
+                        : null
+                    }
+                    {loading
+                        ? <CircularProgress color={"secondary"} className={'progress'}/>
+                        :
+                        <button type={'submit'}>Log in</button>
+                    }
+                </form>
             </div>
-        )
-    } else {
-        navigate('/dashboard')
-        return <Dashboard/>
-    }
+        </div>
+    )
 }
