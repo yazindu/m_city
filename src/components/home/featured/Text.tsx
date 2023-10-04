@@ -1,6 +1,8 @@
 import {Animate} from "react-move";
 import {easePolyOut} from "d3-ease"
 
+import FeaturedPlayer from '../../../resources/images/featured_player.png'
+
 export const Text = () => {
     const animateNumber = () => (
         <Animate
@@ -32,14 +34,14 @@ export const Text = () => {
         <Animate
             show={true}
             start={{
-                opacity:0,
-                x:503,
-                y:450
+                opacity: 0,
+                x: 503,
+                y: 450
             }}
             enter={{
-                opacity:[1],
-                x:[273],
-                y:[450],
+                opacity: [1],
+                x: [273],
+                y: [450],
                 timing: {
                     duration: 500, ease: easePolyOut
                 }
@@ -48,45 +50,71 @@ export const Text = () => {
 
             {({opacity, x, y}) => (
                 <div className={'featured_first'}
-                style={{
-                    opacity,
-                    transform:`translate(${x}px,${y}px)`
-                }}
+                     style={{
+                         opacity,
+                         transform: `translate(${x}px,${y}px)`
+                     }}
                 >league</div>
             )}
         </Animate>
     )
-const animateSecondText = () => (
+    const animateSecondText = () => (
         <Animate
             show={true}
             start={{
-                opacity:0,
-                x:503,
-                y:586
+                opacity: 0,
+                x: 503,
+                y: 586
             }}
             enter={{
-                opacity:[1],
-                x:[273],
-                y:[586],
+                opacity: [1],
+                x: [273],
+                y: [586],
                 timing: {
-                    delay:300, duration: 500, ease: easePolyOut
+                    delay: 300, duration: 500, ease: easePolyOut
                 }
             }}
         >
 
             {({opacity, x, y}) => (
                 <div className={'featured_first'}
-                style={{
-                    opacity,
-                    transform:`translate(${x}px,${y}px)`
-                }}
+                     style={{
+                         opacity,
+                         transform: `translate(${x}px,${y}px)`
+                     }}
                 >championships</div>
+            )}
+        </Animate>
+    )
+
+    const animatePlayer = () => (
+        <Animate
+            show={true}
+            start={{ opacity: 0}}
+            enter={{
+                opacity:[1],
+                timing: {
+                    delay: 800, duration: 500, ease: easePolyOut
+                }
+            }}
+        >
+            {({opacity}) => (
+                <div
+                    style={{
+                        opacity,
+                        background:`url(${FeaturedPlayer}) no-repeat`,
+                        transform: `translate(550px,201px)`
+                    }}
+                    className={'featured_player'}>
+
+                </div>
             )}
         </Animate>
     )
 
     return (
         <div className={'featured_text'}>
+            {animatePlayer()}
             {animateNumber()}
             {animateFirstText()}
             {animateSecondText()}
