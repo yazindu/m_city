@@ -56,11 +56,40 @@ export const Text = () => {
             )}
         </Animate>
     )
+const animateSecondText = () => (
+        <Animate
+            show={true}
+            start={{
+                opacity:0,
+                x:503,
+                y:586
+            }}
+            enter={{
+                opacity:[1],
+                x:[273],
+                y:[586],
+                timing: {
+                    delay:300, duration: 500, ease: easePolyOut
+                }
+            }}
+        >
+
+            {({opacity, x, y}) => (
+                <div className={'featured_first'}
+                style={{
+                    opacity,
+                    transform:`translate(${x}px,${y}px)`
+                }}
+                >championships</div>
+            )}
+        </Animate>
+    )
 
     return (
         <div className={'featured_text'}>
             {animateNumber()}
             {animateFirstText()}
+            {animateSecondText()}
         </div>
     )
 }
