@@ -23,7 +23,7 @@ export const Text = () => {
                          opacity,
                          transform: `translate(260px, 170px) rotateY(${rotate}deg)`
                      }}
-                ></div>
+                >5</div>
             )}
         </Animate>
     )
