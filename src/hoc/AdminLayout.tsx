@@ -1,4 +1,4 @@
-import {AdminNav} from "./nav/AdminNav.tsx";
+import {AdminNav} from "../components/admin/nav/AdminNav.tsx";
 import {ReactElement} from "react";
 
 type AdminLayoutProps = {

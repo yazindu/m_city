@@ -1,4 +1,4 @@
-import {AdminLayout} from "./AdminLayout.tsx";
+import {AdminLayout} from "../../hoc/AdminLayout.tsx";
 
 export const Dashboard = () => {
     return (

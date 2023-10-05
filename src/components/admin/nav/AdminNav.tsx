@@ -2,6 +2,7 @@ import {Link} from "react-router-dom";
 import {ListItemButton} from "@mui/material";
 import {logOutHandler} from "../../utils/tools.tsx";
 
+//original code: export withRouter(AdminNav)
 export const AdminNav = () => {
     const links = [
         {
