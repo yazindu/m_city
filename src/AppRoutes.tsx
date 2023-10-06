@@ -1,7 +1,7 @@
 import {BrowserRouter, Route, Routes} from 'react-router-dom'
-import {Header} from "./components/header_footer/Header.tsx";
+import {Header} from "./components/header-footer/Header.tsx";
 import {Home} from "./components/home";
-import {Footer} from "./components/header_footer/Footer.tsx";
+import {Footer} from "./components/header-footer/Footer.tsx";
 import {SignIn} from "./components/signin";
 import {User as FirebaseUser} from "firebase/auth";
 import {ToastContainer} from 'react-toastify';
