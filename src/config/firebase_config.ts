@@ -1,10 +1,9 @@
 // Import the functions you need from the SDKs you need
 import {initializeApp} from "firebase/app";
 import {getAuth} from "firebase/auth";
-// import { getAnalytics } from "firebase/analytics";
 
-import {getFirestore, collection, addDoc} from "firebase/firestore";
-import {cityDb} from '../temp/m-city-export.ts'
+import {getFirestore, collection} from "firebase/firestore";
+// import {cityDb} from '../temp/m-city-export.ts'
 
 const firebaseConfig = {
     apiKey: "AIzaSyAhPKAguhVKDHlMAhPczPnMFvZ5uSzP4Uc",
@@ -18,15 +17,20 @@ const firebaseConfig = {
 
 // Initialize Firebase
 export const firebaseApp = initializeApp(firebaseConfig);
-// const analytics = getAnalytics(app);
 
 // Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(firebaseApp);
 export const auth = getAuth()
 
+export const matchesCollection = collection(db, "matches");
+export const playersCollection = collection(db, "players");
+export const positionsCollection = collection(db, "positions");
+export const promotionsCollection = collection(db, "promotions");
+export const teamsCollection = collection(db, "teams");
+
 // cityDb.matches.forEach(async (item)=>{
 //     try {
-//         const docRef = await addDoc(collection(db, "matches"), item);
+//         const docRef = await addDoc(matchesCollection, item);
 //         console.log("Document written with ID: ", docRef.id);
 //     } catch (e) {
 //         console.error("Error adding document: ", e);
@@ -35,7 +39,7 @@ export const auth = getAuth()
 
 // cityDb.players.forEach(async (item)=>{
 //     try {
-//         const docRef = await addDoc(collection(db, "players"), item);
+//         const docRef = await addDoc(playersCollection, item);
 //         console.log("Document written with ID: ", docRef.id);
 //     } catch (e) {
 //         console.error("Error adding document: ", e);
@@ -44,7 +48,7 @@ export const auth = getAuth()
 
 // cityDb.positions.forEach(async (item)=>{
 //     try {
-//         const docRef = await addDoc(collection(db, "positions"), item);
+//         const docRef = await addDoc(positionsCollection, item);
 //         console.log("Document written with ID: ", docRef.id);
 //     } catch (e) {
 //         console.error("Error adding document: ", e);
@@ -53,7 +57,7 @@ export const auth = getAuth()
 
 // cityDb.promotions.forEach(async (item)=>{
 //     try {
-//         const docRef = await addDoc(collection(db, "promotions"), item);
+//         const docRef = await addDoc(promotionsCollection, item);
 //         console.log("Document written with ID: ", docRef.id);
 //     } catch (e) {
 //         console.error("Error adding document: ", e);
@@ -62,11 +66,17 @@ export const auth = getAuth()
 
 // cityDb.teams.forEach(async (item)=>{
 //     try {
-//         const docRef = await addDoc(collection(db, "teams"), item);
+//         const docRef = await addDoc(teamsCollection, item);
 //         console.log("Document written with ID: ", docRef.id);
 //     } catch (e) {
 //         console.error("Error adding document: ", e);
 //     }
 // })
 
-
+//const array = matchesCollectionSnapshot.docs.map((doc) => ({id: doc.id, ...doc.data()}))
+//console.log(array);
+// matchesCollectionSnapshot.forEach((doc) => {
+//     // console.log(`${doc.id} => ${doc.data()}`);
+//     console.log(`${JSON.stringify({id: doc.id, ...doc.data()})}`);
+//
+// });
