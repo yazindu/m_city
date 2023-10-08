@@ -3,7 +3,7 @@ export const cityDb = {
         {
             "away": "Man.City",
             "awayThmb": "manchester_city",
-            "date": "2018-05-22",
+            "date": "2024-05-22",
             "final": "No",
             "local": "Burnley",
             "localThmb": "burnley",
@@ -146,7 +146,7 @@ export const cityDb = {
         {
             "away": "Hudd.Town",
             "awayThmb": "huddersfield",
-            "date": "2018-12-13",
+            "date": "2023-12-13",
             "final": "No",
             "local": "Man.City",
             "localThmb": "manchester_city",
