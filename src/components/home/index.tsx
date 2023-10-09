@@ -1,6 +1,7 @@
 import {Featured} from "./featured";
 import {Matches} from "./matches";
 import {MeetPlayers} from "./meet-players";
+import {Promotion} from "./promotion";
 
 export const Home = () => {
     return (
@@ -8,6 +9,7 @@ export const Home = () => {
             <Featured/>
             <Matches/>
             <MeetPlayers/>
+            <Promotion/>
         </div>
     )
 }
