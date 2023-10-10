@@ -11,8 +11,20 @@ import {
     startAfter
 } from "firebase/firestore";
 import {playersCollection} from "../../../config/firebase_config.ts";
-import {playerDocumentFields} from "../../utils/tools.tsx";
-import {Button} from "@mui/material/";
+import {playerDocumentFields, showToastError} from "../../utils/tools.tsx";
+import {
+    Button,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+
+
+} from "@mui/material/";
+import {Link} from 'react-router-dom'
+import {CircularProgress} from "@mui/material";
 
 export const AdminPlayers = () => {
     const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot<DocumentData, DocumentData> | undefined>(undefined)
@@ -33,7 +45,7 @@ export const AdminPlayers = () => {
             }
         } catch (error) {
             const e = error as FirestoreError
-            console.error(e.message);
+            showToastError(e.message);
         } finally {
             setLoading(false)
         }
@@ -41,12 +53,9 @@ export const AdminPlayers = () => {
 
     useEffect(() => {
             if (players.length < 1) {
-                console.log('players.length', players.length)
                 const q = query(playersCollection, limit(2))
                 fetchPlayersCollectionSnapshot(q)
             }
-            console.log('players', players)
-            console.log('lastVisible', lastVisible)
         }, [players]
     )
 
@@ -54,11 +63,67 @@ export const AdminPlayers = () => {
         if (lastVisible) {
             const q = query(playersCollection, startAfter(lastVisible), limit(2));
             fetchPlayersCollectionSnapshot(q)
-        } else console.log('Nothing to load')
+        } else showToastError('Nothing to load')
     }
     return (
         <AdminLayout title={'The players'}>
-            <Button onClick={() => loadMorePlayers()}>Load more</Button>
+            <>
+                <div className={'mb-5'}>
+                    <Button
+                        disableElevation
+                        variant={'outlined'}
+                        component={Link}
+                        to={'/admin_players/add_player'}
+                    >
+                        Add player
+                    </Button>
+                </div>
+                <Paper className={'mb-5'}>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>First name</TableCell>
+                                <TableCell>Last name</TableCell>
+                                <TableCell>Number</TableCell>
+                                <TableCell>Position</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {players
+                                ? players.map(player => (
+                                    <TableRow key={player.id}>
+                                        <TableCell>
+                                            <Link to={`/admin_players/edit_player/${player.id}`}>{player.name}</Link>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Link
+                                                to={`/admin_players/edit_player/${player.id}`}>{player.lastname}</Link>
+                                        </TableCell>
+                                        <TableCell>
+                                            {player.number}
+                                        </TableCell>
+                                        <TableCell>
+                                            {player.position}
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                                : null}
+                        </TableBody>
+                    </Table>
+                </Paper>
+                <Button
+                    onClick={() => loadMorePlayers()}
+                    variant={'contained'}
+                    color={'primary'}
+                    disabled={loading}
+                >Load more</Button>
+                <div className={'admin_progress'}>
+                    {loading
+                        ? <CircularProgress thickness={7} style={{color: '#98c5e9'}}/>
+                        : null
+                    }
+                </div>
+            </>
         </AdminLayout>
     )
 }
