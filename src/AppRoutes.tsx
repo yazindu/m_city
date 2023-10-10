@@ -7,7 +7,10 @@ import {User as FirebaseUser} from "firebase/auth";
 import {ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {AuthGuard} from "./hoc/AuthGuard.tsx";
+
 import {Dashboard} from "./components/admin/Dashboard.tsx";
+import {AdminPlayers} from "./components/admin/players";
+
 
 const AppRoutes = ({user}: { user: FirebaseUser | null }) => {
     return (
@@ -16,6 +19,7 @@ const AppRoutes = ({user}: { user: FirebaseUser | null }) => {
             <Routes>
                 <Route path={'/sign_in'} element={<SignIn user={user}/>}/>
                 <Route path={'/dashboard'} element={<AuthGuard user={user}><Dashboard/></AuthGuard>}/>
+                <Route path={'/admin_players'} element={<AuthGuard user={user}><AdminPlayers/></AuthGuard>}/>
                 <Route path={'/'} element={<Home/>}/>
             </Routes>
             <ToastContainer/>

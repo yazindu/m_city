@@ -5,6 +5,19 @@ import {signOut} from "@firebase/auth";
 import {auth} from "../../config/firebase_config.ts";
 import {ReactNode} from "react";
 
+export type playerDocumentFields = {
+    id: string,
+    image: string,
+    lastname: string,
+    name: string,
+    number: string,
+    position: string,
+}
+
+export type playerProps = {
+    player: playerDocumentFields[]
+}
+
 export type matchDocumentFields = {
     id: string,
     away: string,
