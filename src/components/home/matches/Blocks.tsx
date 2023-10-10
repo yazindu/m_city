@@ -10,15 +10,13 @@ export const Blocks = () => {
 
     useEffect(() => {
             async function fetchMatchesCollectionSnapshot() {
-                if (!!matches && matches.length < 1) {
+                if (matches.length < 1) {
                     try {
                         const matchesCollectionSnapshot = await getDocs(matchesCollection);
                         if (matchesCollectionSnapshot !== null) {
-                            let matches: matchDocumentFields[] = [];
                             matchesCollectionSnapshot.forEach(doc => {
-                                matches.push({id: doc.id, ...doc.data()} as matchDocumentFields)
+                                setMatches(matches => [...matches, {id: doc.id, ...doc.data()} as matchDocumentFields])
                             })
-                            setMatches(matches)
                         }
                     } catch (error) {
                         console.error(error);
