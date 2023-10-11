@@ -1,10 +1,10 @@
 type PlayerCardProps = {
     number: string
     name: string
-    lastName: string
+    lastname: string
     bck: string
 }
-export const PlayerCard = ({number, name, lastName, bck}: PlayerCardProps) => {
+export const PlayerCard = ({number, name, lastname, bck}: PlayerCardProps) => {
     return (
         <div className={'player_card_wrapper'}>
             <div
@@ -15,7 +15,7 @@ export const PlayerCard = ({number, name, lastName, bck}: PlayerCardProps) => {
                 <div className={'player_card_number'}>{number}</div>
                 <div className={'player_card_name'}>
                     <span>{name}</span>
-                    <span>{lastName}</span>
+                    <span>{lastname}</span>
                 </div>
             </div>
         </div>

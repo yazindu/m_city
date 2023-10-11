@@ -55,7 +55,7 @@ export const HomeCards = ({show}: { show: boolean }) => {
                         <PlayerCard
                             number={'30'}
                             name={'Nicolas'}
-                            lastName={'Otamendi'}
+                            lastname={'Otamendi'}
                             bck={card.player}
                         />
                     </div>
