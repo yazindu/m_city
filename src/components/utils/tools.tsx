@@ -4,6 +4,7 @@ import {toast} from 'react-toastify';
 import {signOut} from "@firebase/auth";
 import {auth} from "../../config/firebase_config.ts";
 import {ReactNode} from "react";
+import {FormHelperText} from "@mui/material/";
 
 export type playerDocumentFields = {
     id: string,
@@ -44,15 +45,6 @@ type cityLogoProps = {
     height: string
 }
 
-type tagProps = {
-    link?: string
-    bck?: string
-    fontSize?: string
-    color?: string
-    add?: {}
-    children: ReactNode
-}
-
 export const logOutHandler = () => {
     signOut(auth).then(() => {
         showToastSuccess('Good bye!')
@@ -76,6 +68,14 @@ export const CityLogo = ({linkTo, link, width, height}: cityLogoProps) => {
     else return template
 }
 
+type tagProps = {
+    link?: string
+    bck?: string
+    fontSize?: string
+    color?: string
+    add?: Record<string, string>
+    children: ReactNode
+}
 export const Tag = ({link, bck, fontSize, color, children, add}: tagProps) => {
     const template = <div style={{
         background: bck ? bck : '#ffffff',
@@ -88,7 +88,7 @@ export const Tag = ({link, bck, fontSize, color, children, add}: tagProps) => {
     }}
     >{children}</div>
 
-    if (!!link) {
+    if (link) {
         return (
             <Link to={link}>{template}</Link>
         )
@@ -104,4 +104,27 @@ export const showToastSuccess = (msg: string) => {
     toast.success(msg, {
         position: toast.POSITION.TOP_LEFT
     })
+}
+
+type FormikErrors = Record<string, string>;
+type FormikTouched = Record<string, boolean>;
+
+type ErrorHelperProps = {
+    formik: {
+        errors: FormikErrors;
+        touched: FormikTouched;
+    };
+    values: string;
+};
+
+export const textErrorHelper = ({formik, values}: ErrorHelperProps) => ({
+    error: !!formik.errors[values] && formik.touched[values],
+    helperText: formik.errors[values] && formik.touched[values] ? formik.errors[values] : null
+})
+
+export const selectErrorHelper = ({formik, values}: ErrorHelperProps) => {
+    if(!!formik.errors[values] && formik.touched[values]){
+        return (<FormHelperText error={true}>{formik.errors[values]}</FormHelperText>)
+    }
+    return false;
 }
