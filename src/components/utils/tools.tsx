@@ -5,6 +5,7 @@ import {signOut} from "@firebase/auth";
 import {auth} from "../../config/firebase_config.ts";
 import {ReactNode} from "react";
 import {FormHelperText} from "@mui/material/";
+import {FormikValues} from "formik";
 
 export type playerDocumentFields = {
     id: string,
@@ -106,16 +107,10 @@ export const showToastSuccess = (msg: string) => {
     })
 }
 
-type FormikErrors = Record<string, string>;
-type FormikTouched = Record<string, boolean>;
-
 type ErrorHelperProps = {
-    formik: {
-        errors: FormikErrors;
-        touched: FormikTouched;
-    };
-    values: string;
-};
+    formik : FormikValues,
+    values : string
+}
 
 export const textErrorHelper = ({formik, values}: ErrorHelperProps) => ({
     error: !!formik.errors[values] && formik.touched[values],
