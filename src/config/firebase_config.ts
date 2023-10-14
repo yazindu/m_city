@@ -2,7 +2,18 @@
 import {initializeApp} from "firebase/app";
 import {getAuth} from "firebase/auth";
 
-import {getFirestore, collection} from "firebase/firestore";
+import {
+    getFirestore,
+    collection,
+    DocumentData,
+    QueryDocumentSnapshot,
+    doc,
+    CollectionReference,
+    getDoc,
+    FirestoreError,
+    updateDoc
+} from "firebase/firestore";
+import {defaultValues} from "../components/admin/players/AddEditPlayers.tsx";
 // import {cityDb} from '../temp/m-city-export.ts'
 
 const firebaseConfig = {
@@ -22,11 +33,53 @@ export const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
 export const auth = getAuth()
 
+// Firestore data converter
+const matchesConverter = {
+    toFirestore: (match: DocumentData) => {
+        return {
+            name: match.name,
+            state: match.state,
+            country: match.country
+        };
+    },
+    fromFirestore: (snapshot: QueryDocumentSnapshot) => {
+        //const data = snapshot.data();
+        return {id: snapshot.id, ...snapshot.data()};
+    }
+};
+export const matchesCollectionConverted = collection(db, "matches").withConverter(matchesConverter);
 export const matchesCollection = collection(db, "matches");
 export const playersCollection = collection(db, "players");
 export const positionsCollection = collection(db, "positions");
 export const promotionsCollection = collection(db, "promotions");
 export const teamsCollection = collection(db, "teams");
+
+export const getDocById = async (collection: CollectionReference, id: string) => {
+    const docRef = doc(db, collection.path, id);
+    let error: string | null = null
+    let snapshot: DocumentData | null = null
+    try {
+        snapshot = await getDoc(docRef);
+    } catch (e) {
+        error = (e as FirestoreError).message
+    }
+    return {error, snapshot}
+}
+
+export const updateDocById = async (collection: CollectionReference, id: string | undefined, data: {
+    [key: string]: string
+}) => {
+    let error: string | null = null
+    if (id) {
+        const docRef = doc(db, collection.path, id);
+        try {
+            await updateDoc(docRef, data);
+        } catch (e) {
+            error = (e as FirestoreError).message
+        }
+    }
+    return error
+}
 
 // cityDb.matches.forEach(async (item)=>{
 //     try {

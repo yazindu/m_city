@@ -10,7 +10,15 @@ import {
 } from "@mui/material/";
 import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
-import {selectErrorHelper, textErrorHelper} from "../../utils/tools.tsx";
+import {
+    selectErrorHelper,
+    showToastError,
+    showToastSuccess,
+    textErrorHelper
+} from "../../utils/tools.tsx";
+import {addDoc, FirestoreError} from "firebase/firestore";
+import {getDocById, playersCollection, updateDocById} from "../../../config/firebase_config.ts";
+import {useNavigate} from "react-router-dom";
 
 const defaultValues = {
     name: '',
@@ -18,11 +26,13 @@ const defaultValues = {
     number: '',
     position: ''
 }
+
 export const AddEditPlayers = () => {
+    const navigate = useNavigate();
     const {playerId} = useParams();
     const [loading, setLoading] = useState(false);
     const [values, setValues] = useState(defaultValues)
-    const [formType, seFormType] = useState('')
+    const [formType, setFormType] = useState('')
     const formik = useFormik({
         enableReinitialize: true,
         initialValues: values,
@@ -38,20 +48,59 @@ export const AddEditPlayers = () => {
             position: Yup.string()
                 .required('This input is required'),
         }), onSubmit: (values) => {
-            console.log(values)
+            submitForm(values)
+
         }
     })
 
+    const submitForm = async (dataToSubmit: typeof defaultValues) => {
+        setLoading(true)
+        try {
+            if (formType === 'add') {
+                await addDoc(playersCollection, {
+                    name: dataToSubmit.name,
+                    number: dataToSubmit.number,
+                    position: dataToSubmit.position,
+                    lastname: dataToSubmit.lastname
+                });
+                formik.resetForm()
+                showToastSuccess('Player added')
+                navigate('/admin_players')
+            } else {
+                const error = await updateDocById(playersCollection, playerId, dataToSubmit)
+                error
+                    ? showToastError(error)
+                    : showToastSuccess('Player updated')
+            }
+        } catch (error) {
+            const e = error as FirestoreError
+            showToastError(e.message)
+        } finally {
+            setLoading(false);
+        }
+    }
+
     useEffect(() => {
         if (playerId) {
-            seFormType('edit')
+            setFormType('edit')
             setValues({name: '', lastname: '', number: '', position: ''})
+            const fetchPlayer = async () => {
+                const {error, snapshot} = await getDocById(playersCollection, playerId)
+                if (snapshot && snapshot.exists) {
+                    setFormType('edit')
+                    setValues(snapshot.data())
+                } else {
+                    showToastError('Sorry, nothing was found')
+                }
+                if (error) showToastError(error)
+            }
+            fetchPlayer()
+
         } else {
             setValues(defaultValues)
-            seFormType('add')
+            setFormType('add')
         }
     }, [playerId])
-    console.log('formType', formType, 'values', values)
 
     return (
         <AdminLayout title={formType === 'add' ? 'Add player' : 'Edit player'}>
@@ -89,6 +138,7 @@ export const AddEditPlayers = () => {
                             <FormControl>
                                 <TextField
                                     id={'number'}
+                                    type={'number'}
                                     // name={'number'}
                                     variant={'outlined'}
                                     placeholder={'Add number'}
@@ -107,9 +157,9 @@ export const AddEditPlayers = () => {
                                     {...formik.getFieldProps('position')}>
                                     <MenuItem value={''} disabled>Select a position</MenuItem>
                                     <MenuItem value={'Keeper'}>Keeper</MenuItem>
-                                    <MenuItem value={'Defense'}>Defense</MenuItem>
+                                    <MenuItem value={'Defence'}>Defence</MenuItem>
                                     <MenuItem value={'Midfield'}>Midfield</MenuItem>
-                                    <MenuItem value={'Striker'}>Defense</MenuItem>
+                                    <MenuItem value={'Striker'}>Defence</MenuItem>
                                 </Select>
                                 {selectErrorHelper({formik, values: 'position'})}
                             </FormControl>
@@ -119,10 +169,9 @@ export const AddEditPlayers = () => {
                             variant={'contained'}
                             color={'primary'}
                             disabled={loading}
-                        >
-                            {formType == 'add'
-                                ? 'Add player'
-                                : 'Edit player'}
+                        > {formType == 'add'
+                            ? 'Add player'
+                            : 'Edit player'}
                         </Button>
                     </form>
                 </div>
