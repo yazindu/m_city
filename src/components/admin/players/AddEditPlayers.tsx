@@ -19,6 +19,7 @@ import {
 import {addDoc, FirestoreError} from "firebase/firestore";
 import {getDocById, playersCollection, updateDocById} from "../../../config/firebase_config.ts";
 import {useNavigate} from "react-router-dom";
+import {FileUploader} from "../../utils/FileUploader.tsx";
 
 const defaultValues = {
     name: '',
@@ -107,7 +108,9 @@ export const AddEditPlayers = () => {
             <div className={'editmatch_dialog_wrapper'}>
                 <div>
                     <form onSubmit={formik.handleSubmit}>
-                        image
+                        <FormControl>
+                            <FileUploader dir={'players'}/>
+                        </FormControl>
                         <hr/>
                         <h4>Player info</h4>
                         <div className={'mb-5'}>
