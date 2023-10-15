@@ -13,7 +13,7 @@ import {
     FirestoreError,
     updateDoc
 } from "firebase/firestore";
-import {defaultValues} from "../components/admin/players/AddEditPlayers.tsx";
+import {getStorage} from "firebase/storage";
 // import {cityDb} from '../temp/m-city-export.ts'
 
 const firebaseConfig = {
@@ -32,6 +32,8 @@ export const firebaseApp = initializeApp(firebaseConfig);
 // Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(firebaseApp);
 export const auth = getAuth()
+
+export const storage = getStorage(firebaseApp)
 
 // Firestore data converter
 const matchesConverter = {
