@@ -1,6 +1,7 @@
 // Import the functions you need from the SDKs you need
 import {initializeApp} from "firebase/app";
 import {getAuth} from "firebase/auth";
+import { getStorage } from "firebase/storage";
 
 import {
     getFirestore,
@@ -13,7 +14,6 @@ import {
     FirestoreError,
     updateDoc
 } from "firebase/firestore";
-import {defaultValues} from "../components/admin/players/AddEditPlayers.tsx";
 // import {cityDb} from '../temp/m-city-export.ts'
 
 const firebaseConfig = {
@@ -32,6 +32,8 @@ export const firebaseApp = initializeApp(firebaseConfig);
 // Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(firebaseApp);
 export const auth = getAuth()
+
+export const storage = getStorage();
 
 // Firestore data converter
 const matchesConverter = {
