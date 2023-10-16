@@ -1,6 +1,6 @@
-import {matchProps} from "./tools.tsx";
+import {MatchesBlockProps} from "./tools.tsx";
 
-export const MatchesBlock = ({match}: matchProps) => (
+export const MatchesBlock = ({match}: MatchesBlockProps) => (
     <div className={'match_block'}>
         <div className={'match_date'}>
             {match.date}

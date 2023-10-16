@@ -35,11 +35,11 @@ export type matchDocumentFields = {
     stadium: string
 }
 
-export type matchProps = {
+export type MatchesBlockProps = {
     match: matchDocumentFields
 }
 
-type cityLogoProps = {
+type CityLogoProps = {
     link: boolean
     linkTo: string
     width: string
@@ -53,7 +53,7 @@ export const logOutHandler = () => {
         showToastError(error.message)
     });
 }
-export const CityLogo = ({linkTo, link, width, height}: cityLogoProps) => {
+export const CityLogo = ({linkTo, link, width, height}: CityLogoProps) => {
     const template = <div
         className={'img_cover'}
         style={{
@@ -69,7 +69,7 @@ export const CityLogo = ({linkTo, link, width, height}: cityLogoProps) => {
     else return template
 }
 
-type tagProps = {
+type TagProps = {
     link?: string
     bck?: string
     fontSize?: string
@@ -77,7 +77,7 @@ type tagProps = {
     add?: Record<string, string>
     children: ReactNode
 }
-export const Tag = ({link, bck, fontSize, color, children, add}: tagProps) => {
+export const Tag = ({link, bck, fontSize, color, children, add}: TagProps) => {
     const template = <div style={{
         background: bck ? bck : '#ffffff',
         fontSize: fontSize ? fontSize : '15px',
@@ -122,4 +122,8 @@ export const selectErrorHelper = ({formik, values}: ErrorHelperProps) => {
         return (<FormHelperText error={true}>{formik.errors[values]}</FormHelperText>)
     }
     return false;
+}
+
+export const  selectIsError = ({formik, values}: ErrorHelperProps) => {
+    return formik.errors[values] && formik.touched[values];
 }

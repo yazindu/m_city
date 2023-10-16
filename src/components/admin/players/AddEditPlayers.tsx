@@ -11,7 +11,7 @@ import {
 import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import {
-    selectErrorHelper,
+    selectErrorHelper, selectIsError,
     showToastError,
     showToastSuccess,
     textErrorHelper
@@ -25,7 +25,8 @@ const defaultValues = {
     name: '',
     lastname: '',
     number: '',
-    position: ''
+    position: '',
+    image: ''
 }
 
 export const AddEditPlayers = () => {
@@ -47,6 +48,8 @@ export const AddEditPlayers = () => {
                 .min(0, 'The minimum is zero')
                 .max(100, 'The max is 100'),
             position: Yup.string()
+                .required('This input is required'),
+            image: Yup.string()
                 .required('This input is required'),
         }), onSubmit: (values) => {
             submitForm(values)
@@ -84,7 +87,7 @@ export const AddEditPlayers = () => {
     useEffect(() => {
         if (playerId) {
             setFormType('edit')
-            setValues({name: '', lastname: '', number: '', position: ''})
+            setValues(defaultValues)
             const fetchPlayer = async () => {
                 const {error, snapshot} = await getDocById(playersCollection, playerId)
                 if (snapshot && snapshot.exists) {
@@ -103,13 +106,18 @@ export const AddEditPlayers = () => {
         }
     }, [playerId])
 
+    const updateImageName = (filename: string) => {
+        formik.setFieldValue('image', filename)
+    }
+
     return (
         <AdminLayout title={formType === 'add' ? 'Add player' : 'Edit player'}>
             <div className={'editmatch_dialog_wrapper'}>
                 <div>
                     <form onSubmit={formik.handleSubmit}>
-                        <FormControl>
-                            <FileUploader dir={'players'}/>
+                        <FormControl error={selectIsError({formik, values: 'image'})}>
+                            <FileUploader dir={'players'} filename={filename => updateImageName(filename)}/>
+                            {selectErrorHelper({formik, values: 'image'})}
                         </FormControl>
                         <hr/>
                         <h4>Player info</h4>
@@ -151,7 +159,7 @@ export const AddEditPlayers = () => {
                             </FormControl>
                         </div>
                         <div className={'mb-5'}>
-                            <FormControl>
+                            <FormControl error={selectIsError({formik, values: 'position'})}>
                                 <Select
                                     id={'position'}
                                     // name={'position'}
