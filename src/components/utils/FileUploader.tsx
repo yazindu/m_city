@@ -1,4 +1,4 @@
-import {ChangeEvent, useState} from "react";
+import {ChangeEvent, useEffect, useState} from "react";
 import {ref, uploadBytesResumable, getDownloadURL} from "firebase/storage";
 import {storage} from "../../config/firebase_config.ts";
 import {showToastError} from "./tools.tsx";
@@ -11,13 +11,27 @@ type uploadStateProps = {
 }
 
 type FileUploaderProps = {
+    defaultImg: string
+    defaultImgName: string
     dir: string
-    filename: (filename : string) => void
+    filename: (filename: string) => void
+    resetImage: () => void
 }
-export const FileUploader = ({dir, filename}: FileUploaderProps) => {
+
+export const FileUploader = ({defaultImg, defaultImgName, dir, filename, resetImage}: FileUploaderProps) => {
     const [uploadState, setUploadState] = useState({name: '', isUploading: false, fileURL: ''} as uploadStateProps)
     const randomFileName = `${crypto.randomUUID()}.png`
     const playersRef = ref(storage, `${dir}/${randomFileName}`);
+
+    useEffect(() => {
+        if (defaultImg) {
+            setUploadState(state => ({
+                ...state,
+                name: defaultImgName,
+                fileURL: defaultImg
+            }))
+        }
+    }, [defaultImg, defaultImgName])
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
@@ -50,6 +64,11 @@ export const FileUploader = ({dir, filename}: FileUploaderProps) => {
         }
     };
 
+    const uploadAgain = () => {
+        setUploadState({name: '', isUploading: false, fileURL: ''})
+        resetImage()
+    }
+
     return (
         <div>
             {!uploadState.fileURL &&
@@ -69,7 +88,7 @@ export const FileUploader = ({dir, filename}: FileUploaderProps) => {
                     src={uploadState.fileURL}
                     alt={uploadState.name}
                 ></img>
-                <div className={'remove'} onClick={() => alert('remove')}>Remove</div>
+                <div className={'remove'} onClick={() => uploadAgain()}>Remove</div>
             </div>
         }
         </div>

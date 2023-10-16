@@ -17,9 +17,10 @@ import {
     textErrorHelper
 } from "../../utils/tools.tsx";
 import {addDoc, FirestoreError} from "firebase/firestore";
-import {getDocById, playersCollection, updateDocById} from "../../../config/firebase_config.ts";
+import {getDocById, playersCollection, storage, updateDocById} from "../../../config/firebase_config.ts";
 import {useNavigate} from "react-router-dom";
 import {FileUploader} from "../../utils/FileUploader.tsx";
+import {getDownloadURL, ref} from "firebase/storage";
 
 const defaultValues = {
     name: '',
@@ -35,6 +36,7 @@ export const AddEditPlayers = () => {
     const [loading, setLoading] = useState(false);
     const [values, setValues] = useState(defaultValues)
     const [formType, setFormType] = useState('')
+    const [defaultImg, setDefaultImg] = useState('')
     const formik = useFormik({
         enableReinitialize: true,
         initialValues: values,
@@ -62,10 +64,11 @@ export const AddEditPlayers = () => {
         try {
             if (formType === 'add') {
                 await addDoc(playersCollection, {
+                    image: dataToSubmit.image,
+                    lastname: dataToSubmit.lastname,
                     name: dataToSubmit.name,
                     number: dataToSubmit.number,
                     position: dataToSubmit.position,
-                    lastname: dataToSubmit.lastname
                 });
                 formik.resetForm()
                 showToastSuccess('Player added')
@@ -91,6 +94,15 @@ export const AddEditPlayers = () => {
             const fetchPlayer = async () => {
                 const {error, snapshot} = await getDocById(playersCollection, playerId)
                 if (snapshot && snapshot.exists) {
+                    try {
+                        const playersRef = ref(storage, `players/${snapshot.data().image}`);
+                        const downloadURL = await getDownloadURL(playersRef)
+                        updateImageName(snapshot.data().image)
+                        setDefaultImg(downloadURL)
+                    } catch (e) {
+                        const error = e as FirestoreError
+                        showToastError(error.message);
+                    }
                     setFormType('edit')
                     setValues(snapshot.data())
                 } else {
@@ -110,13 +122,24 @@ export const AddEditPlayers = () => {
         formik.setFieldValue('image', filename)
     }
 
+    const resetImage = () => {
+        formik.setFieldValue('image', '')
+        setDefaultImg('')
+    }
+
     return (
         <AdminLayout title={formType === 'add' ? 'Add player' : 'Edit player'}>
             <div className={'editmatch_dialog_wrapper'}>
                 <div>
                     <form onSubmit={formik.handleSubmit}>
                         <FormControl error={selectIsError({formik, values: 'image'})}>
-                            <FileUploader dir={'players'} filename={filename => updateImageName(filename)}/>
+                            <FileUploader
+                                defaultImg={defaultImg} //image url
+                                defaultImgName={formik.values.image} //name of file
+                                dir={'players'}
+                                filename={filename => updateImageName(filename)}
+                                resetImage={() => resetImage()}
+                            />
                             {selectErrorHelper({formik, values: 'image'})}
                         </FormControl>
                         <hr/>
