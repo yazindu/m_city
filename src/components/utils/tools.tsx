@@ -14,14 +14,7 @@ export type playerDocumentFields = {
     name: string,
     number: string,
     position: string,
-}
-
-export type playerDocumentFieldsWithURL = playerDocumentFields & {
-    url: string;
-}
-
-export type playerProps = {
-    player: playerDocumentFields[]
+    url: string
 }
 
 export type matchDocumentFields = {

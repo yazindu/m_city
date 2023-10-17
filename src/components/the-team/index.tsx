@@ -1,8 +1,11 @@
 import {useEffect, useState} from "react";
 import {FirestoreError, getDocs} from "firebase/firestore";
 import {playersCollection, storage} from "../../config/firebase_config.ts";
-import {playerDocumentFields, playerDocumentFieldsWithURL, showToastError} from "../utils/tools.tsx";
+import {playerDocumentFields, showToastError} from "../utils/tools.tsx";
 import {getDownloadURL, ref} from "firebase/storage";
+import {CircularProgress} from "@mui/material";
+import {Slide} from "react-awesome-reveal";
+import {PlayerCard} from "../utils/PlayerCard.tsx";
 
 export const TheTeam = () => {
     const [loading, setLoading] = useState(true)
@@ -14,11 +17,10 @@ export const TheTeam = () => {
                 setLoading(true)
                 try {
                     const playersCollectionSnapshot = await getDocs(playersCollection);
-                    let players = [] as playerDocumentFieldsWithURL[]
+                    let players = [] as playerDocumentFields[]
                     if (playersCollectionSnapshot !== null) {
                         playersCollectionSnapshot.forEach(doc => {
-                            players.push({id: doc.id, url: '', ...doc.data()} as playerDocumentFieldsWithURL)
-                            // setPlayers(players => [...players, {id: doc.id, ...doc.data()} as playerDocumentFields])
+                            players.push({id: doc.id, url: '', ...doc.data()} as playerDocumentFields)
                         })
 
                         let promises: Promise<string>[] = [];
@@ -37,9 +39,12 @@ export const TheTeam = () => {
                             )
                         })
                         Promise.all(promises)
-                            .then(()=>{setPlayers(players)})
-                            .catch((e)=>{
-                                console.log('promise catch',e)})
+                            .then(() => {
+                                setPlayers(players)
+                            })
+                            .catch((e) => {
+                                console.log('promise catch', e)
+                            })
                         console.log('promise players', players)
                     }
                 } catch (error) {
@@ -58,9 +63,54 @@ export const TheTeam = () => {
         }, [players]
     )
 
+    const showPlayerByCategory = (category: string) => (
+        players
+            ? players.map((player, i) => {
+                return player.position === category
+                    ? <Slide direction={'left'} key={player.id} triggerOnce>
+                        <div className={'item'}>
+                            <PlayerCard number={player.number} name={player.name} lastname={player.lastname}
+                                        bck={player.url}/>
+                        </div>
+                    </Slide>
+                    : null
+            })
+            : null
+    )
+
+
     return (
-        <>
-            <br/><br/><br/><br/><h1>noob</h1>
-        </>
+        <div className={'the_team_container'}>
+            {
+                loading
+                    ? <div className={'progress'}><CircularProgress/></div>
+                    : <div>
+                        <div className={'team_category_wrapper'}>
+                            <div className={'title'}>Keepers</div>
+                            <div className={'team_cards'}>
+                                {showPlayerByCategory('Keeper')}
+                            </div>
+                        </div>
+                        <div className={'team_category_wrapper'}>
+                            <div className={'title'}>Defence</div>
+                            <div className={'team_cards'}>
+                                {showPlayerByCategory('Defence')}
+                            </div>
+                        </div>
+                        <div className={'team_category_wrapper'}>
+                            <div className={'title'}>Midfield</div>
+                            <div className={'team_cards'}>
+                                {showPlayerByCategory('Midfield')}
+                            </div>
+                        </div>
+                        <div className={'team_category_wrapper'}>
+                            <div className={'title'}>Strikers</div>
+                            <div className={'team_cards'}>
+                                {showPlayerByCategory('Striker')}
+                            </div>
+                        </div>
+                    </div>
+            }
+        </div>
     )
 }
