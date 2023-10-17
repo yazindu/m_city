@@ -16,6 +16,10 @@ export type playerDocumentFields = {
     position: string,
 }
 
+export type playerDocumentFieldsWithURL = playerDocumentFields & {
+    url: string;
+}
+
 export type playerProps = {
     player: playerDocumentFields[]
 }
@@ -108,8 +112,8 @@ export const showToastSuccess = (msg: string) => {
 }
 
 type ErrorHelperProps = {
-    formik : FormikValues,
-    values : string
+    formik: FormikValues,
+    values: string
 }
 
 export const textErrorHelper = ({formik, values}: ErrorHelperProps) => ({
@@ -118,12 +122,12 @@ export const textErrorHelper = ({formik, values}: ErrorHelperProps) => ({
 })
 
 export const selectErrorHelper = ({formik, values}: ErrorHelperProps) => {
-    if(!!formik.errors[values] && formik.touched[values]){
+    if (!!formik.errors[values] && formik.touched[values]) {
         return (<FormHelperText error={true}>{formik.errors[values]}</FormHelperText>)
     }
     return false;
 }
 
-export const  selectIsError = ({formik, values}: ErrorHelperProps) => {
+export const selectIsError = ({formik, values}: ErrorHelperProps) => {
     return formik.errors[values] && formik.touched[values];
 }
