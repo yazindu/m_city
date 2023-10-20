@@ -74,8 +74,7 @@ export const AdminPlayers = () => {
                         variant={'outlined'}
                         component={Link}
                         to={'/admin_players/add_player'}
-                    >
-                        Add player
+                    > Add player
                     </Button>
                 </div>
                 <Paper className={'mb-5'}>

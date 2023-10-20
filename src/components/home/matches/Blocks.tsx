@@ -10,23 +10,23 @@ export const Blocks = () => {
 
     useEffect(() => {
             async function fetchMatchesCollectionSnapshot() {
-                if (matches.length < 1) {
-                    try {
-                        const matchesCollectionSnapshot = await getDocs(matchesCollection);
-                        if (matchesCollectionSnapshot !== null) {
-                            matchesCollectionSnapshot.forEach(doc => {
-                                setMatches(matches => [...matches, {id: doc.id, ...doc.data()} as matchDocumentFields])
-                            })
-                        }
-                    } catch (error) {
-                        console.error(error);
+                try {
+                    const matchesCollectionSnapshot = await getDocs(matchesCollection);
+                    if (matchesCollectionSnapshot !== null) {
+                        matchesCollectionSnapshot.forEach(doc => {
+                            setMatches(matches => [...matches, {id: doc.id, ...doc.data()} as matchDocumentFields])
+                        })
                     }
+                } catch (error) {
+                    console.error(error);
                 }
             }
 
-            fetchMatchesCollectionSnapshot().then(() => {
-                console.log('matches', matches)
-            })
+            if (matches.length < 1) {
+                fetchMatchesCollectionSnapshot().then(() => {
+                    console.log('matches', matches)
+                })
+            }
         }, [matches]
     )
 

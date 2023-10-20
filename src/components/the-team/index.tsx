@@ -65,7 +65,7 @@ export const TheTeam = () => {
 
     const showPlayerByCategory = (category: string) => (
         players
-            ? players.map((player, i) => {
+            ? players.map((player) => {
                 return player.position === category
                     ? <Slide direction={'left'} key={player.id} triggerOnce>
                         <div className={'item'}>
