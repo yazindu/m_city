@@ -5,9 +5,18 @@ import {
     FormControl,
     Button
 } from "@mui/material/";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useFormik} from "formik";
 import * as Yup from 'yup'
+import {AdminLayout} from "../../../hoc/AdminLayout.tsx";
+import {
+    selectErrorHelper,
+    selectIsError, showToastError,
+    teamDocumentFields,
+    textErrorHelper
+} from "../../utils/tools.tsx";
+import {FirestoreError, getDocs} from "firebase/firestore";
+import {teamsCollection} from "../../../config/firebase_config.ts";
 
 const defaultValues = {
     date: '',
@@ -25,7 +34,7 @@ export const AddEditMatches = () => {
     const [loading, setLoading] = useState(false);
     const [formType, setFormType] = useState('')
     const [values, setValues] = useState(defaultValues)
-    const [teams, setTeams] = useState(null)
+    const [teams, setTeams] = useState<teamDocumentFields[]>([])
 
     const formik = useFormik({
         enableReinitialize: true,
@@ -61,10 +70,73 @@ export const AddEditMatches = () => {
         }
     })
 
+    useEffect(() => {
+            async function fetchTeamsCollectionSnapshot() {
+                try {
+                    const matchesCollectionSnapshot = await getDocs(teamsCollection);
+                    if (matchesCollectionSnapshot !== null) {
+                        matchesCollectionSnapshot.forEach(doc => {
+                            setTeams(teams => [...teams, {id: doc.id, ...doc.data()} as teamDocumentFields])
+                        })
+                    }
+                } catch (error) {
+                    const e = error as FirestoreError
+                    showToastError(e.message)
+                }
+            }
+
+            if (teams.length < 1) {
+                fetchTeamsCollectionSnapshot()
+            }
+            console.log('teams', teams)
+
+        }, [teams]
+    )
 
     return (
-        <>
-            <h1>Add Edit Matches</h1>
-        </>
+        <AdminLayout title={'undefined'}>
+            <div className={'editmatch_dialog_wrapper'}>
+                <div>
+                    <form onSubmit={formik.handleSubmit}>
+                        <div>
+                            <h4>Select date</h4>
+                            <FormControl>
+                                <TextField
+                                    id={'date'}
+                                    type={'date'}
+                                    variant={'outlined'}
+                                    {...formik.getFieldProps('date')}
+                                    {...textErrorHelper({formik, values: 'date'})}
+                                ></TextField>
+                            </FormControl>
+                            <hr/>
+                            <div>
+                                <h4>Result local</h4>
+                                <FormControl error={selectIsError({formik, values: 'local'})}>
+                                    <Select
+                                        id={'local'}
+                                        variant={'outlined'}
+                                        displayEmpty
+                                        {...formik.getFieldProps('local')}
+                                    ><MenuItem value={''} disabled>Select a team</MenuItem>
+                                    </Select>
+                                    {selectErrorHelper({formik, values: 'local'})}
+                                </FormControl>
+                                <FormControl style={{marginLeft: '10px'}}>
+                                    <TextField
+                                        id={'resultLocal'}
+                                        type={'number'}
+                                        variant={'outlined'}
+                                        {...formik.getFieldProps('resultLocal')}
+                                        {...textErrorHelper({formik, values: 'resultLocal'})}
+                                    ></TextField>
+
+                                </FormControl>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </AdminLayout>
     )
 }

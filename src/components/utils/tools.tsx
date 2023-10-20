@@ -7,6 +7,13 @@ import {ReactNode} from "react";
 import {FormHelperText} from "@mui/material/";
 import {FormikValues} from "formik";
 
+export type teamDocumentFields = {
+    id: string,
+    name: string,
+    shortName: string,
+    thmb: string
+}
+
 export type playerDocumentFields = {
     id: string,
     image: string,
