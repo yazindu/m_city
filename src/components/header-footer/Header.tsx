@@ -30,6 +30,9 @@ export const Header = ({user}: { user: FirebaseUser | null }) => {
                 <Link to={'/admin_players'}>
                     <Button color={"inherit"}>DEV_APLAYERS</Button>
                 </Link>
+                <Link to={'/admin_matches'}>
+                    <Button color={"inherit"}>DEV_AMATCHES</Button>
+                </Link>
                 <Link to={'/the_team'}>
                     <Button color={"inherit"}>The team</Button>
                 </Link>
