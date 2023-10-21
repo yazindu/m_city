@@ -15,6 +15,7 @@ import {AdminMatches} from "./components/admin/matches";
 import {AddEditMatches} from "./components/admin/matches/AddEditMatches.tsx";
 import {TheTeam} from "./components/the-team";
 import {TheMatches} from "./components/the-matches";
+import {NotFound} from "./components/not-found/NotFound.tsx";
 
 
 const AppRoutes = ({user}: { user: FirebaseUser | null }) => {
@@ -33,6 +34,7 @@ const AppRoutes = ({user}: { user: FirebaseUser | null }) => {
                 <Route path={'/admin_matches'} element={<AuthGuard user={user}><AdminMatches/></AuthGuard>}/>
                 <Route path={'/admin_matches/add_match'} element={<AuthGuard user={user}><AddEditMatches/></AuthGuard>}/>
                 <Route path={'/admin_matches/edit_match/:matchId'} element={<AuthGuard user={user}><AddEditMatches/></AuthGuard>}/>
+                <Route path={'*'} element={<NotFound/>}/>
             </Routes>
             <ToastContainer/>
             <Footer/>
