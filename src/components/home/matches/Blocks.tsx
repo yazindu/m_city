@@ -1,6 +1,5 @@
 import {useEffect, useState} from "react";
-import {matchesCollection} from "../../../config/firebase_config.ts";
-import {getDocs} from "firebase/firestore";
+import {fetchCollectionSnapshot} from "../../../config/firebase_config.ts";
 import {Slide} from "react-awesome-reveal";
 import {matchDocumentFields} from "../../utils/tools.tsx";
 import {MatchesBlock} from "../../utils/MatchesBlock.tsx";
@@ -9,22 +8,9 @@ export const Blocks = () => {
     const [matches, setMatches] = useState<matchDocumentFields[]>([])
 
     useEffect(() => {
-            async function fetchMatchesCollectionSnapshot() {
-                try {
-                    const matchesCollectionSnapshot = await getDocs(matchesCollection);
-                    if (matchesCollectionSnapshot !== null) {
-                        matchesCollectionSnapshot.forEach(doc => {
-                            setMatches(matches => [...matches, {id: doc.id, ...doc.data()} as matchDocumentFields])
-                        })
-                    }
-                } catch (error) {
-                    console.error(error);
-                }
-            }
-
             if (matches.length < 1) {
-                fetchMatchesCollectionSnapshot().then(() => {
-                    console.log('matches', matches)
+                fetchCollectionSnapshot<matchDocumentFields>('matches').then((matches) => {
+                    setMatches(matches)
                 })
             }
         }, [matches]

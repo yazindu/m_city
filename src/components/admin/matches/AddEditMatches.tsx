@@ -11,15 +11,18 @@ import * as Yup from 'yup'
 import {AdminLayout} from "../../../hoc/AdminLayout.tsx";
 import {
     selectErrorHelper,
-    selectIsError, showToastError, showToastSuccess,
+    selectIsError,
+    showToastError,
+    showToastSuccess,
     teamDocumentFields,
     textErrorHelper
 } from "../../utils/tools.tsx";
-import {addDoc, FirestoreError, getDocs} from "firebase/firestore";
+import {addDoc, FirestoreError} from "firebase/firestore";
 import {
+    fetchCollectionSnapshot,
     getDocById,
     matchesCollection,
-    teamsCollection, updateDocById
+    updateDocById
 } from "../../../config/firebase_config.ts";
 import {useNavigate, useParams} from "react-router-dom";
 
@@ -118,22 +121,11 @@ export const AddEditMatches = () => {
     }
 
     useEffect(() => {
-            async function fetchTeamsCollectionSnapshot() {
-                try {
-                    const matchesCollectionSnapshot = await getDocs(teamsCollection);
-                    if (matchesCollectionSnapshot !== null) {
-                        matchesCollectionSnapshot.forEach(doc => {
-                            setTeams(teams => [...teams, {id: doc.id, ...doc.data()} as teamDocumentFields])
-                        })
-                    }
-                } catch (error) {
-                    const e = error as FirestoreError
-                    showToastError(e.message)
-                }
-            }
-
             if (teams.length < 1) {
-                fetchTeamsCollectionSnapshot()
+                fetchCollectionSnapshot<teamDocumentFields>('teams').then((teams) => {
+                    // console.log('teams', teams)
+                    setTeams(teams)
+                })
             }
         }, [teams]
     )

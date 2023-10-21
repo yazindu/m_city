@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
-import {FirestoreError, getDocs} from "firebase/firestore";
-import {playersCollection, storage} from "../../config/firebase_config.ts";
+import {FirestoreError} from "firebase/firestore";
+import {fetchCollectionSnapshot, storage} from "../../config/firebase_config.ts";
 import {playerDocumentFields, showToastError} from "../utils/tools.tsx";
 import {getDownloadURL, ref} from "firebase/storage";
 import {CircularProgress} from "@mui/material";
@@ -13,52 +13,42 @@ export const TheTeam = () => {
 
 
     useEffect(() => {
-            async function fetchPlayersCollectionSnapshot() {
+            async function fetchPlayersWithImgURLs() {
                 setLoading(true)
-                try {
-                    const playersCollectionSnapshot = await getDocs(playersCollection);
-                    let players = [] as playerDocumentFields[]
-                    if (playersCollectionSnapshot !== null) {
-                        playersCollectionSnapshot.forEach(doc => {
-                            players.push({id: doc.id, url: '', ...doc.data()} as playerDocumentFields)
-                        })
-
-                        let promises: Promise<string>[] = [];
-                        players.forEach((player, index) => {
-                            promises.push(
-                                new Promise((resolve, reject) => {
-                                    const playersRef = ref(storage, `players/${player.image}`);
-                                    getDownloadURL(playersRef).then((downloadURL) => {
-                                        players[index].url = downloadURL
-                                        resolve('1')
-                                    }).catch(() => {
-                                        // const e = error as FirestoreError
-                                        reject(player.name)
-                                    })
+                fetchCollectionSnapshot<playerDocumentFields>('players').then((players) => {
+                    console.log('players', players)
+                    let promises: Promise<string>[] = [];
+                    players.forEach((player, index) => {
+                        promises.push(
+                            new Promise((resolve, reject) => {
+                                const playersRef = ref(storage, `players/${player.image}`);
+                                getDownloadURL(playersRef).then((downloadURL) => {
+                                    players[index].url = downloadURL
+                                    Promise.all(promises)
+                                        .then(() => {
+                                            setPlayers(players)
+                                        })
+                                        .catch((error) => {
+                                            const e = error as FirestoreError
+                                            showToastError(e.message);
+                                        })
+                                        .finally(() => {
+                                            setLoading(false)
+                                        })
+                                    resolve('ok')
+                                }).catch((error) => {
+                                    const e = error as FirestoreError
+                                    reject(e.message)
                                 })
-                            )
-                        })
-                        Promise.all(promises)
-                            .then(() => {
-                                setPlayers(players)
                             })
-                            .catch((e) => {
-                                console.log('promise catch', e)
-                            })
-                        console.log('promise players', players)
-                    }
-                } catch (error) {
-                    const e = error as FirestoreError
-                    showToastError(e.message);
-                } finally {
-                    setLoading(false)
-                }
+                        )
+                    })
+
+                })
             }
 
             if (players.length < 1) {
-                fetchPlayersCollectionSnapshot().then(() => {
-                    // console.log('players', players)
-                })
+                fetchPlayersWithImgURLs()
             }
         }, [players]
     )

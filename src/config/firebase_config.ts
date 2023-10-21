@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import {initializeApp} from "firebase/app";
 import {getAuth} from "firebase/auth";
-import { getStorage } from "firebase/storage";
+import {getStorage} from "firebase/storage";
 
 import {
     getFirestore,
@@ -12,8 +12,11 @@ import {
     CollectionReference,
     getDoc,
     FirestoreError,
-    updateDoc
+    updateDoc, getDocs
 } from "firebase/firestore";
+import {
+    showToastError
+} from "../components/utils/tools.tsx";
 // import {cityDb} from '../temp/m-city-export.ts'
 
 const firebaseConfig = {
@@ -49,6 +52,39 @@ const matchesConverter = {
         return {id: snapshot.id, ...snapshot.data()};
     }
 };
+
+export const fetchCollectionSnapshot = async <T, >(param: 'matches' | 'players' | 'positions' | 'teams') => {
+    let collection: typeof matchesCollection | typeof playersCollection | typeof positionsCollection | typeof teamsCollection
+    let array: T[] = []
+    switch (param) {
+        case "matches":
+            collection = matchesCollection
+            break
+        case "players":
+            collection = playersCollection
+            break
+        case "positions":
+            collection = positionsCollection
+            break
+        case "teams":
+            collection = teamsCollection
+            break
+    }
+    try {
+        const collectionSnapshot = await getDocs(collection);
+        if (collectionSnapshot !== null) {
+            collectionSnapshot.forEach(doc => {
+                array.push({id: doc.id, ...doc.data()} as T)
+            })
+        }
+    } catch (error) {
+        const e = error as FirestoreError
+        showToastError(e.message);
+    }
+    // console.log(param, array)
+    return array
+}
+
 export const matchesCollectionConverted = collection(db, "matches").withConverter(matchesConverter);
 export const matchesCollection = collection(db, "matches");
 export const playersCollection = collection(db, "players");
