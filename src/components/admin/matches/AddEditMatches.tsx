@@ -18,7 +18,7 @@ import {
 import {addDoc, FirestoreError, getDocs} from "firebase/firestore";
 import {
     getDocById,
-    matchesCollection, playersCollection,
+    matchesCollection,
     teamsCollection, updateDocById
 } from "../../../config/firebase_config.ts";
 import {useNavigate, useParams} from "react-router-dom";
@@ -50,28 +50,28 @@ export const AddEditMatches = () => {
         initialValues: values,
         validationSchema: Yup.object({
             date: Yup.string()
-                .required('This input is requried'),
+                .required('This input is required'),
             local: Yup.string()
-                .required('This input is requried'),
-            resultLocal: Yup.number()
-                .required('This input is requried')
+                .required('This input is required'),
+            resultLocal: Yup.string()
+                .required('This input is required')
                 .min(0, 'The minimum is 0')
                 .max(99, 'The maximum is 99'),
             away: Yup.string()
-                .required('This input is requried'),
+                .required('This input is required'),
             resultAway: Yup.number()
-                .required('This input is requried')
+                .required('This input is required')
                 .min(0, 'The minimum is 0')
                 .max(99, 'The maximum is 99'),
             referee: Yup.string()
-                .required('This input is requried'),
+                .required('This input is required'),
             stadium: Yup.string()
-                .required('This input is requried'),
+                .required('This input is required'),
             result: Yup.mixed()
-                .required('This input is requried')
+                .required('This input is required')
                 .oneOf(['W', 'D', 'L', 'N/A']),
             final: Yup.mixed()
-                .required('This input is requried')
+                .required('This input is required')
                 .oneOf(['Yes', 'No']),
         }), onSubmit: (values) => {
             submitForm(values)
@@ -107,7 +107,7 @@ export const AddEditMatches = () => {
                 const error = await updateDocById(matchesCollection, matchId, dataToSubmit)
                 error
                     ? showToastError(error)
-                    : showToastSuccess('Player updated')
+                    : showToastSuccess('Match updated')
             }
         } catch (error) {
             const e = error as FirestoreError
