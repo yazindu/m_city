@@ -2,8 +2,7 @@ import {
     TextField,
     Select,
     MenuItem,
-    FormControl,
-    Button
+    FormControl
 } from "@mui/material/";
 import {useEffect, useState} from "react";
 import {useFormik} from "formik";
@@ -16,7 +15,12 @@ import {
     textErrorHelper
 } from "../../utils/tools.tsx";
 import {FirestoreError, getDocs} from "firebase/firestore";
-import {teamsCollection} from "../../../config/firebase_config.ts";
+import {
+    getDocById,
+    matchesCollection,
+    teamsCollection
+} from "../../../config/firebase_config.ts";
+import {useNavigate, useParams} from "react-router-dom";
 
 const defaultValues = {
     date: '',
@@ -31,10 +35,12 @@ const defaultValues = {
 }
 
 export const AddEditMatches = () => {
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [formType, setFormType] = useState('')
     const [values, setValues] = useState(defaultValues)
     const [teams, setTeams] = useState<teamDocumentFields[]>([])
+    const {matchId} = useParams();
 
     const formik = useFormik({
         enableReinitialize: true,
@@ -70,6 +76,14 @@ export const AddEditMatches = () => {
         }
     })
 
+    const showTeams = () => (
+        teams
+            ? teams.map(item => (
+                <MenuItem key={item.id} value={item.shortName}>{item.shortName}</MenuItem>
+            ))
+            : null
+    )
+
     useEffect(() => {
             async function fetchTeamsCollectionSnapshot() {
                 try {
@@ -92,6 +106,25 @@ export const AddEditMatches = () => {
 
         }, [teams]
     )
+
+    useEffect(() => {
+        if (matchId) {
+            const fetchMatch = async () => {
+                const {error, snapshot} = await getDocById(matchesCollection, matchId)
+                if (snapshot && snapshot.exists) {
+                    setFormType('edit')
+                    setValues(snapshot.data())
+                } else {
+                    showToastError('Sorry, nothing was found')
+                }
+                if (error) showToastError(error)
+            }
+            fetchMatch()
+        } else {
+            setFormType('add')
+            setValues(defaultValues)
+        }
+    }, [matchId])
 
     return (
         <AdminLayout title={'undefined'}>
@@ -119,6 +152,7 @@ export const AddEditMatches = () => {
                                         displayEmpty
                                         {...formik.getFieldProps('local')}
                                     ><MenuItem value={''} disabled>Select a team</MenuItem>
+                                        {showTeams()}
                                     </Select>
                                     {selectErrorHelper({formik, values: 'local'})}
                                 </FormControl>
@@ -129,8 +163,31 @@ export const AddEditMatches = () => {
                                         variant={'outlined'}
                                         {...formik.getFieldProps('resultLocal')}
                                         {...textErrorHelper({formik, values: 'resultLocal'})}
-                                    ></TextField>
+                                    />
+                                </FormControl>
+                                <div>
 
+                                </div>
+                                <h4>Result away</h4>
+                                <FormControl error={selectIsError({formik, values: 'away'})}>
+                                    <Select
+                                        id={'away'}
+                                        variant={'outlined'}
+                                        displayEmpty
+                                        {...formik.getFieldProps('away')}
+                                    ><MenuItem value={''} disabled>Select a team</MenuItem>
+                                        {showTeams()}
+                                    </Select>
+                                    {selectErrorHelper({formik, values: 'away'})}
+                                </FormControl>
+                                <FormControl style={{marginLeft: '10px'}}>
+                                    <TextField
+                                        id={'resultAway'}
+                                        type={'number'}
+                                        variant={'outlined'}
+                                        {...formik.getFieldProps('resultAway')}
+                                        {...textErrorHelper({formik, values: 'resultAway'})}
+                                    />
                                 </FormControl>
                             </div>
                         </div>

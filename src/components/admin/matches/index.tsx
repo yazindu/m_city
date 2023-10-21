@@ -96,8 +96,8 @@ export const AdminMatches = () => {
                                         </TableCell>
                                         <TableCell>
                                             <Link
-                                                to={`/admin_matches/edit_match/${match.id}`}></Link>
-                                            {match.away} <strong>-</strong> {match.local}
+                                                to={`/admin_matches/edit_match/${match.id}`}>{match.away}
+                                                <strong>-</strong> {match.local}</Link>
                                         </TableCell>
                                         <TableCell>
                                             {match.resultAway} <strong>-</strong> {match.resultLocal}
