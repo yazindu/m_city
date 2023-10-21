@@ -3,6 +3,7 @@ import {matchDocumentFields} from "../utils/tools.tsx";
 import {fetchCollectionSnapshot} from "../../config/firebase_config.ts";
 import {CircularProgress} from "@mui/material";
 import {LeagueTable} from "./Tables.tsx";
+import {MatchesList} from "./MatchesList.tsx";
 
 export const TheMatches = () => {
     const [matches, setMatches] = useState<matchDocumentFields[]>([])
@@ -109,6 +110,7 @@ export const TheMatches = () => {
                                     </div>
                                 </div>
                             </div>
+                            <MatchesList matches={state.filterMatches}/>
                         </div>
                         <div className={'right'}>
                             <LeagueTable/>
