@@ -16,7 +16,6 @@ export const TheTeam = () => {
             async function fetchPlayersWithImgURLs() {
                 setLoading(true)
                 fetchCollectionSnapshot<playerDocumentFields>('players').then((players) => {
-                    console.log('players', players)
                     let promises: Promise<string>[] = [];
                     players.forEach((player, index) => {
                         promises.push(
@@ -38,7 +37,10 @@ export const TheTeam = () => {
                                     resolve('ok')
                                 }).catch((error) => {
                                     const e = error as FirestoreError
+                                    showToastError(e.message)
                                     reject(e.message)
+                                }).finally(() => {
+                                    setLoading(false)
                                 })
                             })
                         )

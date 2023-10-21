@@ -28,7 +28,6 @@ export const SignIn = ({user}: { user: FirebaseUser | null }) => {
         onSubmit: (values) => {
             setLoading(true)
             submitForm(values)
-            console.log(values)
         }
     })
 

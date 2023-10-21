@@ -81,7 +81,6 @@ export const fetchCollectionSnapshot = async <T, >(param: 'matches' | 'players' 
         const e = error as FirestoreError
         showToastError(e.message);
     }
-    // console.log(param, array)
     return array
 }
 

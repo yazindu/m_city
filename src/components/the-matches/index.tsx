@@ -38,7 +38,6 @@ export const TheMatches = () => {
             resultFilter: 'All'
         })
     }
-    console.log(state.filterMatches)
 
     const showResult = (result: 'W' | 'L' | 'D' | 'All') => {
         const list = matches.filter((match) => {
