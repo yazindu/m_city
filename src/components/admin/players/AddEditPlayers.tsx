@@ -63,13 +63,7 @@ export const AddEditPlayers = () => {
         setLoading(true)
         try {
             if (formType === 'add') {
-                await addDoc(playersCollection, {
-                    image: dataToSubmit.image,
-                    lastname: dataToSubmit.lastname,
-                    name: dataToSubmit.name,
-                    number: dataToSubmit.number,
-                    position: dataToSubmit.position,
-                });
+                await addDoc(playersCollection, dataToSubmit);
                 formik.resetForm()
                 showToastSuccess('Player added')
                 navigate('/admin_players')
