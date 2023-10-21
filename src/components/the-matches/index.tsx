@@ -6,8 +6,8 @@ import {LeagueTable} from "./Tables.tsx";
 
 export const TheMatches = () => {
     const [matches, setMatches] = useState<matchDocumentFields[]>([])
-    const [state, dispatch] = useReducer((prevState, nextSTate) => {
-        return {...prevState, ...nextSTate}
+    const [state, dispatch] = useReducer((prevState, nextState) => {
+        return {...prevState, ...nextState}
     }, {
         filterMatches: null,
         playedFilter: 'All',
