@@ -6,11 +6,12 @@ import {firebaseApp} from "../../config/firebase_config.ts";
 import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
 import {showToastError, showToastSuccess} from "../utils/tools.tsx";
 import {useNavigate} from "react-router-dom";
-import {User as FirebaseUser} from "firebase/auth";
+import {useMCityStore} from "../../store/store.ts";
 
-export const SignIn = ({user}: { user: FirebaseUser | null }) => {
+export const SignIn = () => {
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate();
+    const user = useMCityStore(store => store.user)
 
     const formik = useFormik({
 
@@ -35,7 +36,7 @@ export const SignIn = ({user}: { user: FirebaseUser | null }) => {
         const auth = getAuth(firebaseApp)
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
-                const userr = userCredential.user;
+                //const user = userCredential.user;
                 showToastSuccess("Welcome back!");
                 navigate('/dashboard')
             })

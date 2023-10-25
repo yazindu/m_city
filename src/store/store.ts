@@ -3,10 +3,8 @@ import {devtools, persist} from 'zustand/middleware'
 import {User as FirebaseUser} from "@firebase/auth";
 
 interface MCityStoreState {
-    // user: FirebaseUser | null
-    // setUser: (user: FirebaseUser | null) => void
-    user: string
-    setUser: (user: string) => void
+    user: FirebaseUser | null
+    setUser: (user: FirebaseUser | null) => void
 }
 
 export const useMCityStore = create<MCityStoreState>()(
@@ -14,9 +12,9 @@ export const useMCityStore = create<MCityStoreState>()(
         persist(
             (set) => ({
                 user: null,
-                setUser: () => set((state) => ({user: state.user}))
+                setUser: (user: FirebaseUser) => set((state) => ({user: user}))
             }), {
-                name: 'mcity-storage'
+                name: 'm_city-storage'
             })
     )
 )

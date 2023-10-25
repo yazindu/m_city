@@ -1,9 +1,10 @@
 import {AppBar, Button, Toolbar} from '@mui/material/'
 import {Link} from "react-router-dom";
 import {CityLogo, logOutHandler} from "../utils/tools.tsx";
-import {User as FirebaseUser} from "@firebase/auth";
+import {useMCityStore} from "../../store/store.ts";
 
-export const Header = ({user}: { user: FirebaseUser | null }) => {
+export const Header = () => {
+    const user = useMCityStore(store => store.user)
 
     return (
         <AppBar

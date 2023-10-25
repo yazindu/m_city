@@ -1,15 +1,14 @@
 import {PropsWithChildren, useEffect} from "react";
-import {User as FirebaseUser} from "@firebase/auth";
 import {useNavigate} from "react-router-dom";
+import {useMCityStore} from "../store/store.ts";
 
-type AuthGuardProps = PropsWithChildren & { user: FirebaseUser | null };
-
-export function AuthGuard(props: AuthGuardProps) {
+export function AuthGuard({children}: PropsWithChildren) {
     const navigate = useNavigate();
+    const user = useMCityStore(store => store.user)
 
     useEffect(() => {
-        if (!props.user) navigate('/sign_in')
-    }, [navigate, props.user]);
+        if (!user) navigate('/sign_in')
+    }, [navigate, user]);
 
-    return !!props.user && props.children;
+    return !!user && children;
 }
